@@ -1,0 +1,26 @@
+# Source files
+src/
+test/
+
+# Config files
+tsconfig.json
+tsup.config.ts
+.eslintrc.json
+.editorconfig
+.nvmrc
+
+# CI/CD
+.github/
+
+# Development
+*.test.ts
+*.spec.ts
+vitest.config.ts
+
+# Documentation source
+docs/
+
+# Git
+.git/
+.gitignore
+
