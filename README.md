@@ -16,6 +16,25 @@
 
 ---
 
+## Public Endpoint Verified
+
+✅ **Connectivity confirmed against Archivas mainnet**
+
+The SDK has been verified against the public Archivas endpoint:
+
+```bash
+ARCHIVAS_RPC_BASE=https://seed.archivas.ai npm run verify
+```
+
+**Live Monitoring:**
+- Daily CI health checks at 03:00 UTC via GitHub Actions
+- Deterministic transaction signing (RFC 8785 canonical JSON)
+- Ed25519 signature compatibility validated
+
+For a complete list of public endpoints, see the [Archivas node repository](https://github.com/ArchivasNetwork/archivas).
+
+---
+
 ## Installation
 
 ```bash
