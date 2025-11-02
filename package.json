@@ -1,6 +1,6 @@
 {
   "name": "@archivas/sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Official TypeScript SDK for Archivas blockchain (v1.1.0 API)",
   "type": "module",
   "main": "./dist/index.cjs.js",
@@ -22,6 +22,7 @@
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "test": "vitest run",
     "test:watch": "vitest",
+    "verify": "tsx scripts/verify-connection.ts",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "clean": "rm -rf dist",
@@ -59,6 +60,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
     "tsup": "^8.0.0",
+    "tsx": "^4.7.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
   },

@@ -1,0 +1,39 @@
+name: SDK Connectivity
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * *"  # Daily at 3 AM UTC
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run connectivity verification
+        run: npm run verify
+        env:
+          ARCHIVAS_RPC_BASE: https://seed.archivas.ai
+      
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: connectivity-check-results
+          path: |
+            ./*.log
+          retention-days: 7
+          if-no-files-found: ignore
+

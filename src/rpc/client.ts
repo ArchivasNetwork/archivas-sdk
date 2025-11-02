@@ -21,7 +21,12 @@ export class RpcClient {
   private headers: Record<string, string>;
 
   constructor(config: RpcConfig = {}) {
-    this.baseUrl = (config.baseUrl || ARCHIVAS_CONSTANTS.DEFAULT_RPC).replace(/\/$/, '');
+    // Priority: config.baseUrl > env.ARCHIVAS_RPC_BASE > default
+    const defaultUrl = (typeof process !== 'undefined' && process.env?.ARCHIVAS_RPC_BASE) 
+      ? process.env.ARCHIVAS_RPC_BASE 
+      : ARCHIVAS_CONSTANTS.DEFAULT_RPC;
+    
+    this.baseUrl = (config.baseUrl || defaultUrl).replace(/\/$/, '');
     this.timeout = config.timeout || 30000;
     this.headers = {
       'Content-Type': 'application/json',

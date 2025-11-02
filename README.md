@@ -272,6 +272,49 @@ const { sigHex, pubHex } = await Tx.sign(tx, secretKey);
 
 ---
 
+## Connectivity Check
+
+The SDK includes a connectivity verification script to test RPC endpoints and validate SDK functionality.
+
+### Basic Usage
+
+```bash
+# Default endpoint (https://seed.archivas.ai)
+npm run verify
+
+# Custom endpoint
+ARCHIVAS_RPC_BASE=https://custom-node.example.com npm run verify
+
+# With account lookup
+ARCHIVAS_TEST_ADDRESS=arcv1... npm run verify
+
+# Full test with broadcast (use test funds only!)
+ARCHIVAS_BROADCAST=1 ARCHIVAS_TEST_PRIVKEY=<64-byte-hex> npm run verify
+```
+
+### Environment Variables
+
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `ARCHIVAS_RPC_BASE` | RPC endpoint URL | No | `https://seed.archivas.ai` |
+| `ARCHIVAS_TEST_ADDRESS` | Address to query account info | No | - |
+| `ARCHIVAS_BROADCAST` | Enable transaction broadcasting (`1` to enable) | No | - |
+| `ARCHIVAS_TEST_PRIVKEY` | Ed25519 secret key (128 hex chars, 64 bytes) for broadcast | Only if `ARCHIVAS_BROADCAST=1` | - |
+
+**Security Warning:** Never use production private keys with `ARCHIVAS_BROADCAST`. Only use test accounts with minimal funds.
+
+### What the Script Tests
+
+1. **Chain Tip** - Fetches current blockchain height and hash
+2. **Account Query** - Gets balance and nonce (if address provided)
+3. **Transaction Building** - Creates and signs a dummy transaction
+4. **Canonical Serialization** - Validates RFC 8785 JSON canonicalization
+5. **Blake2b Hashing** - Computes transaction hash with domain separation
+6. **Ed25519 Signing** - Signs transaction with throwaway keys
+7. **Broadcasting** - Submits real transaction (only if explicitly enabled)
+
+---
+
 ## Development
 
 ```bash
@@ -286,6 +329,9 @@ npm run build
 
 # Lint
 npm run lint
+
+# Verify connectivity
+npm run verify
 ```
 
 ---
