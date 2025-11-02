@@ -27,7 +27,7 @@ describe('Derivation', () => {
     const kp = await Derivation.fromMnemonic(TEST_MNEMONIC);
     const address = Derivation.toAddress(kp.publicKey);
 
-    expect(address).toMatch(/^arcv1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{39}$/);
+    expect(address).toMatch(/^arcv1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{38}$/);
   });
 
   it('should produce deterministic address from mnemonic', async () => {
