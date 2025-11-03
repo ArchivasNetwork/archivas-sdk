@@ -84,8 +84,8 @@ describe('Tx', () => {
     expect(hash1).toHaveLength(32);
   });
 
-  it('should sign transaction correctly', async () => {
-    const kp = await Derivation.fromMnemonic(TEST_MNEMONIC);
+  it('should sign transaction correctly', () => {
+    const kp = Derivation.fromMnemonic(TEST_MNEMONIC);
 
     const tx: TxBody = {
       type: 'transfer',
@@ -96,15 +96,15 @@ describe('Tx', () => {
       nonce: '0'
     };
 
-    const { sigHex, pubHex, hashHex } = await Tx.sign(tx, kp.secretKey);
+    const { sigHex, pubHex, hashHex } = Tx.sign(tx, kp.secretKey);
 
     expect(sigHex).toHaveLength(128);  // 64 bytes as hex
     expect(pubHex).toHaveLength(64);   // 32 bytes as hex
     expect(hashHex).toHaveLength(64);  // 32 bytes as hex
   });
 
-  it('should create complete signed transaction', async () => {
-    const kp = await Derivation.fromMnemonic(TEST_MNEMONIC);
+  it('should create complete signed transaction', () => {
+    const kp = Derivation.fromMnemonic(TEST_MNEMONIC);
 
     const tx: TxBody = {
       type: 'transfer',
@@ -115,7 +115,7 @@ describe('Tx', () => {
       nonce: '0'
     };
 
-    const signed = await Tx.createSigned(tx, kp.secretKey);
+    const signed = Tx.createSigned(tx, kp.secretKey);
 
     expect(signed.tx).toEqual(tx);
     expect(signed.pubkey).toBeTruthy();
@@ -138,4 +138,3 @@ describe('Tx', () => {
     expect(size).toBeLessThan(500);  // Reasonable upper bound
   });
 });
-

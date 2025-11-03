@@ -1,5 +1,5 @@
 /**
- * Wallet Derivation (Mnemonic → KeyPair → Address)
+ * Wallet Derivation (Mnemonic → KeyPair → Address) - Synchronous
  */
 
 import { generateMnemonic as genMnemonic, mnemonicToSeed } from '../crypto/bip39';
@@ -17,14 +17,14 @@ export class Derivation {
   }
 
   /**
-   * Derive Ed25519 keypair from mnemonic
+   * Derive Ed25519 keypair from mnemonic (synchronous)
    * @param mnemonic - 24-word BIP39 mnemonic
    * @param passphrase - Optional BIP39 passphrase
    * @returns Ed25519 keypair
    */
-  static async fromMnemonic(mnemonic: string, passphrase: string = ''): Promise<KeyPair> {
+  static fromMnemonic(mnemonic: string, passphrase: string = ''): KeyPair {
     const seed = mnemonicToSeed(mnemonic, passphrase);
-    return await deriveKeyPair(seed);
+    return deriveKeyPair(seed);
   }
 
   /**
@@ -37,14 +37,28 @@ export class Derivation {
   }
 
   /**
-   * Derive address directly from mnemonic (convenience)
+   * Derive address directly from mnemonic (convenience, synchronous)
    * @param mnemonic - 24-word BIP39 mnemonic
    * @param passphrase - Optional BIP39 passphrase
    * @returns Bech32 address
    */
-  static async mnemonicToAddress(mnemonic: string, passphrase: string = ''): Promise<Address> {
-    const kp = await Derivation.fromMnemonic(mnemonic, passphrase);
+  static mnemonicToAddress(mnemonic: string, passphrase: string = ''): Address {
+    const kp = Derivation.fromMnemonic(mnemonic, passphrase);
     return Derivation.toAddress(kp.publicKey);
   }
-}
 
+  // Async wrappers for backward compatibility
+  /**
+   * @deprecated Use synchronous fromMnemonic() instead
+   */
+  static async fromMnemonicAsync(mnemonic: string, passphrase: string = ''): Promise<KeyPair> {
+    return Derivation.fromMnemonic(mnemonic, passphrase);
+  }
+
+  /**
+   * @deprecated Use synchronous mnemonicToAddress() instead
+   */
+  static async mnemonicToAddressAsync(mnemonic: string, passphrase: string = ''): Promise<Address> {
+    return Derivation.mnemonicToAddress(mnemonic, passphrase);
+  }
+}

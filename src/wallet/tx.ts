@@ -4,7 +4,7 @@
 
 import { canonicalJSON, estimateTxSize } from '../crypto/canonical';
 import { hashTx, bytesToHex } from '../crypto/hash';
-import { sign as ed25519Sign } from '../crypto/ed25519';
+import { signSync as ed25519SignSync } from '../crypto/ed25519';
 import type { TxBody, SignedTx, Address } from '../types';
 import { ARCHIVAS_CONSTANTS } from '../types';
 
@@ -63,16 +63,16 @@ export class Tx {
   }
 
   /**
-   * Sign a transaction
+   * Sign a transaction (synchronous)
    * @param tx - Transaction body
    * @param secretKey - 64-byte Ed25519 secret key
    * @returns Signature, public key, and hash (all as hex strings)
    */
-  static async sign(tx: TxBody, secretKey: Uint8Array): Promise<{
+  static sign(tx: TxBody, secretKey: Uint8Array): {
     sigHex: string;
     pubHex: string;
     hashHex: string;
-  }> {
+  } {
     if (secretKey.length !== 64) {
       throw new Error('Secret key must be 64 bytes');
     }
@@ -80,8 +80,8 @@ export class Tx {
     // Hash the transaction
     const txHash = Tx.hash(tx);
 
-    // Sign the hash
-    const signature = await ed25519Sign(txHash, secretKey);
+    // Sign the hash (synchronous)
+    const signature = ed25519SignSync(txHash, secretKey);
 
     // Extract public key from secret key
     const publicKey = secretKey.slice(32, 64);
@@ -94,13 +94,25 @@ export class Tx {
   }
 
   /**
-   * Create a signed transaction ready for broadcast
+   * Sign a transaction (async wrapper for backward compatibility)
+   * @deprecated Use synchronous sign() instead
+   */
+  static async signAsync(tx: TxBody, secretKey: Uint8Array): Promise<{
+    sigHex: string;
+    pubHex: string;
+    hashHex: string;
+  }> {
+    return Tx.sign(tx, secretKey);
+  }
+
+  /**
+   * Create a signed transaction ready for broadcast (synchronous)
    * @param tx - Transaction body
    * @param secretKey - 64-byte Ed25519 secret key
    * @returns Signed transaction object
    */
-  static async createSigned(tx: TxBody, secretKey: Uint8Array): Promise<SignedTx> {
-    const { sigHex, pubHex, hashHex } = await Tx.sign(tx, secretKey);
+  static createSigned(tx: TxBody, secretKey: Uint8Array): SignedTx {
+    const { sigHex, pubHex, hashHex } = Tx.sign(tx, secretKey);
 
     return {
       tx,
@@ -108,6 +120,14 @@ export class Tx {
       sig: sigHex,
       hash: hashHex
     };
+  }
+
+  /**
+   * Create a signed transaction (async wrapper for backward compatibility)
+   * @deprecated Use synchronous createSigned() instead
+   */
+  static async createSignedAsync(tx: TxBody, secretKey: Uint8Array): Promise<SignedTx> {
+    return Tx.createSigned(tx, secretKey);
   }
 
   /**

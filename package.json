@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/ArchivasNetwork/archivas-sdk#readme",
   "dependencies": {
-    "@noble/ed25519": "^2.1.0",
+    "@noble/curves": "^1.4.0",
     "@noble/hashes": "^1.5.0",
     "bech32": "^2.0.0",
     "bip39": "^3.1.0"

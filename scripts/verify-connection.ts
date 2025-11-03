@@ -91,9 +91,9 @@ async function main() {
   try {
     logInfo('Building dummy transaction (transfer)...');
     
-    // Generate throwaway mnemonic for testing
+    // Generate throwaway mnemonic for testing (synchronous!)
     const mnemonic = Derivation.mnemonicGenerate();
-    const keyPair = await Derivation.fromMnemonic(mnemonic);
+    const keyPair = Derivation.fromMnemonic(mnemonic);
     const fromAddress = Derivation.toAddress(keyPair.publicKey);
     
     // Build dummy transaction
@@ -126,9 +126,9 @@ async function main() {
     logSuccess(`Transaction hash: ${hashHex}`);
     console.log();
 
-    // Sign transaction
+    // Sign transaction (synchronous!)
     logInfo('Signing transaction with Ed25519...');
-    const { sigHex, pubHex } = await Tx.sign(tx, keyPair.secretKey);
+    const { sigHex, pubHex } = Tx.sign(tx, keyPair.secretKey);
     logSuccess('Transaction signed');
     console.log('  Signature:', sigHex.slice(0, 32) + '...');
     console.log('  Public Key:', pubHex);
@@ -175,8 +175,8 @@ async function main() {
         memo: 'SDK test broadcast'
       });
 
-      // Sign and submit
-      const signedTx = await Tx.createSigned(tx, secretKey);
+      // Sign and submit (synchronous signing!)
+      const signedTx = Tx.createSigned(tx, secretKey);
       const result = await rpc.submit(signedTx);
 
       if (result.ok && result.hash) {

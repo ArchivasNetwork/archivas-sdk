@@ -19,9 +19,9 @@ async function main() {
   const mnemonic = Derivation.mnemonicGenerate();
   console.log('   Mnemonic:', mnemonic.split(' ').slice(0, 4).join(' '), '...');
 
-  // 2. Derive keypair and address
+  // 2. Derive keypair and address (synchronous!)
   console.log('\n2️⃣  Deriving keypair and address...');
-  const keyPair = await Derivation.fromMnemonic(mnemonic);
+  const keyPair = Derivation.fromMnemonic(mnemonic);
   const address = Derivation.toAddress(keyPair.publicKey);
   console.log('   Address:', address);
   console.log('   Public Key:', Buffer.from(keyPair.publicKey).toString('hex'));
@@ -57,9 +57,9 @@ async function main() {
     console.log('   Transaction built successfully');
     console.log('   Size:', Tx.estimateSize(tx), 'bytes');
     
-    // 7. Sign the transaction
+    // 7. Sign the transaction (synchronous!)
     console.log('\n7️⃣  Signing transaction...');
-    const { hashHex, sigHex } = await Tx.sign(tx, keyPair.secretKey);
+    const { hashHex, sigHex } = Tx.sign(tx, keyPair.secretKey);
     console.log('   Hash:', hashHex);
     console.log('   Signature:', sigHex.slice(0, 32) + '...');
 
