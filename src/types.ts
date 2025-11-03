@@ -77,6 +77,51 @@ export interface RpcConfig {
   headers?: Record<string, string>;
 }
 
+/** Explorer/Block API types */
+
+/** Block summary for explorer listings */
+export interface ArchivasBlockSummary {
+  height: string;
+  hash: string;
+  timestamp?: string;
+  miner?: string;
+  txCount?: number;
+  difficulty?: string;
+}
+
+/** Transaction summary for explorer listings */
+export interface ArchivasTxSummary {
+  hash: string;
+  from: string;
+  to: string;
+  amount: string;
+  fee: string;
+  nonce: string;
+  height?: string;
+  timestamp?: string;
+}
+
+/** Full block details */
+export interface ArchivasBlock {
+  height: string;
+  hash: string;
+  prevHash?: string;
+  timestamp?: string;
+  difficulty?: string;
+  miner?: string;
+  txs?: ArchivasTxSummary[];
+}
+
+/** Recent blocks response */
+export interface RecentBlocksResponse {
+  blocks: ArchivasBlockSummary[];
+}
+
+/** Recent transactions response */
+export interface RecentTxsResponse {
+  txs: ArchivasTxSummary[];
+}
+
 /** Constants */
 export const ARCHIVAS_CONSTANTS = {
   COIN_TYPE: 734,                           // SLIP-0044

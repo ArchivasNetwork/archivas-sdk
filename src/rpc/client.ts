@@ -11,7 +11,12 @@ import type {
   SignedTx,
   SubmitResponse,
   FeeEstimate,
-  RpcConfig
+  RpcConfig,
+  ArchivasBlockSummary,
+  ArchivasTxSummary,
+  ArchivasBlock,
+  RecentBlocksResponse,
+  RecentTxsResponse
 } from '../types';
 import { ARCHIVAS_CONSTANTS } from '../types';
 
@@ -128,6 +133,37 @@ export class RpcClient {
   async getNonce(address: Address): Promise<bigint> {
     const account = await this.getAccount(address);
     return BigInt(account.nonce);
+  }
+
+  // Explorer API methods
+
+  /**
+   * Get recent blocks
+   * @param limit - Maximum number of blocks to return (default: 20)
+   * @returns Recent blocks summary
+   */
+  async getRecentBlocks(limit: number = 20): Promise<ArchivasBlockSummary[]> {
+    const response = await this.request<RecentBlocksResponse>('GET', `/blocks/recent?limit=${limit}`);
+    return response.blocks;
+  }
+
+  /**
+   * Get recent transactions
+   * @param limit - Maximum number of transactions to return (default: 50)
+   * @returns Recent transactions summary
+   */
+  async getRecentTxs(limit: number = 50): Promise<ArchivasTxSummary[]> {
+    const response = await this.request<RecentTxsResponse>('GET', `/tx/recent?limit=${limit}`);
+    return response.txs;
+  }
+
+  /**
+   * Get block by height
+   * @param height - Block height (number or string)
+   * @returns Full block details
+   */
+  async getBlockByHeight(height: number | string): Promise<ArchivasBlock> {
+    return this.request<ArchivasBlock>('GET', `/block/${height}`);
   }
 }
 

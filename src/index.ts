@@ -20,7 +20,12 @@ export type {
   FeeEstimate,
   MempoolResponse,
   TxDetails,
-  RpcConfig
+  RpcConfig,
+  ArchivasBlockSummary,
+  ArchivasTxSummary,
+  ArchivasBlock,
+  RecentBlocksResponse,
+  RecentTxsResponse
 } from './types';
 
 export { ARCHIVAS_CONSTANTS } from './types';

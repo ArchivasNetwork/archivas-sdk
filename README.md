@@ -122,6 +122,35 @@ const pending = await rpc.getMempool();
 console.log('Pending transactions:', pending.length);
 ```
 
+### Explorer API
+
+```typescript
+import { createRpcClient } from '@archivas/sdk';
+
+const rpc = createRpcClient();
+
+// Get recent blocks
+const blocks = await rpc.getRecentBlocks(20);  // Default: 20
+blocks.forEach(block => {
+  console.log(`Block ${block.height}: ${block.hash}`);
+  console.log(`  Transactions: ${block.txCount}`);
+  console.log(`  Difficulty: ${block.difficulty}`);
+});
+
+// Get recent transactions
+const txs = await rpc.getRecentTxs(50);  // Default: 50
+txs.forEach(tx => {
+  console.log(`${tx.hash}: ${tx.from} → ${tx.to}`);
+  console.log(`  Amount: ${(Number(tx.amount) / 1e8).toFixed(8)} RCHV`);
+});
+
+// Get block by height
+const block = await rpc.getBlockByHeight(12345);
+console.log('Block hash:', block.hash);
+console.log('Previous hash:', block.prevHash);
+console.log('Transactions:', block.txs?.length);
+```
+
 ---
 
 ## API Reference
@@ -192,6 +221,11 @@ console.log('Pending transactions:', pending.length);
 - `rpc.getBalance(address): Promise<bigint>` - Balance as bigint
 - `rpc.getNonce(address): Promise<bigint>` - Nonce as bigint
 
+**Explorer methods:**
+- `rpc.getRecentBlocks(limit?: number): Promise<ArchivasBlockSummary[]>` - Get recent blocks (default: 20)
+- `rpc.getRecentTxs(limit?: number): Promise<ArchivasTxSummary[]>` - Get recent transactions (default: 50)
+- `rpc.getBlockByHeight(height: number | string): Promise<ArchivasBlock>` - Get full block details by height
+
 ---
 
 ## Types
@@ -219,6 +253,36 @@ interface SignedTx {
   pubkey: string;  // hex
   sig: string;     // hex
   hash: string;    // hex
+}
+
+interface ArchivasBlockSummary {
+  height: string;
+  hash: string;
+  timestamp?: string;
+  miner?: string;
+  txCount?: number;
+  difficulty?: string;
+}
+
+interface ArchivasTxSummary {
+  hash: string;
+  from: string;
+  to: string;
+  amount: string;
+  fee: string;
+  nonce: string;
+  height?: string;
+  timestamp?: string;
+}
+
+interface ArchivasBlock {
+  height: string;
+  hash: string;
+  prevHash?: string;
+  timestamp?: string;
+  difficulty?: string;
+  miner?: string;
+  txs?: ArchivasTxSummary[];
 }
 ```
 
