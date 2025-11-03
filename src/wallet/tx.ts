@@ -3,8 +3,8 @@
  */
 
 import { canonicalJSON, estimateTxSize } from '../crypto/canonical';
-import { hashTx, bytesToHex } from '../crypto/hash';
-import { signSync as ed25519SignSync } from '../crypto/ed25519';
+import { hashTx, bytesToHex, hexToBytes } from '../crypto/hash';
+import { signSync as ed25519SignSync, getPublicKeySync } from '../crypto/ed25519';
 import type { TxBody, SignedTx, Address } from '../types';
 import { ARCHIVAS_CONSTANTS } from '../types';
 
@@ -137,6 +137,100 @@ export class Tx {
    */
   static estimateSize(tx: TxBody): number {
     return estimateTxSize(tx);
+  }
+
+  // Raw key signing helpers (no mnemonic derivation required)
+
+  /**
+   * Sign transaction with raw private key (synchronous)
+   * Accepts either 32-byte seed or 64-byte secret key (seed || pubkey)
+   * 
+   * @param tx - Transaction body
+   * @param privateKey - 32-byte or 64-byte Ed25519 private key
+   * @returns Signature, public key, and hash (all as hex strings)
+   */
+  static signWithRawKey(tx: TxBody, privateKey: Uint8Array): {
+    sigHex: string;
+    pubHex: string;
+    hashHex: string;
+  } {
+    let secretKey: Uint8Array;
+    let publicKey: Uint8Array;
+
+    if (privateKey.length === 32) {
+      // 32-byte seed - derive public key and create 64-byte format
+      publicKey = getPublicKeySync(privateKey);
+      secretKey = new Uint8Array(64);
+      secretKey.set(privateKey, 0);
+      secretKey.set(publicKey, 32);
+    } else if (privateKey.length === 64) {
+      // 64-byte format (seed || pubkey)
+      secretKey = privateKey;
+      publicKey = privateKey.slice(32, 64);
+    } else {
+      throw new Error('Private key must be 32 bytes (seed) or 64 bytes (seed || pubkey)');
+    }
+
+    // Hash the transaction
+    const txHash = Tx.hash(tx);
+
+    // Sign the hash
+    const signature = ed25519SignSync(txHash, secretKey);
+
+    return {
+      sigHex: bytesToHex(signature),
+      pubHex: bytesToHex(publicKey),
+      hashHex: bytesToHex(txHash)
+    };
+  }
+
+  /**
+   * Create a signed transaction with raw private key (synchronous)
+   * Accepts either 32-byte seed or 64-byte secret key
+   * 
+   * @param tx - Transaction body
+   * @param privateKey - 32-byte or 64-byte Ed25519 private key
+   * @returns Signed transaction object
+   */
+  static createSignedFromRawKey(tx: TxBody, privateKey: Uint8Array): SignedTx {
+    const { sigHex, pubHex, hashHex } = Tx.signWithRawKey(tx, privateKey);
+
+    return {
+      tx,
+      pubkey: pubHex,
+      sig: sigHex,
+      hash: hashHex
+    };
+  }
+
+  /**
+   * Sign transaction with hex-encoded private key (synchronous)
+   * Convenience wrapper for hex string input
+   * 
+   * @param tx - Transaction body
+   * @param hexPrivateKey - Hex-encoded private key (64 or 128 hex chars)
+   * @returns Signature, public key, and hash (all as hex strings)
+   */
+  static signWithHexKey(tx: TxBody, hexPrivateKey: string): {
+    sigHex: string;
+    pubHex: string;
+    hashHex: string;
+  } {
+    const privateKey = hexToBytes(hexPrivateKey);
+    return Tx.signWithRawKey(tx, privateKey);
+  }
+
+  /**
+   * Create a signed transaction with hex-encoded private key (synchronous)
+   * Convenience wrapper for hex string input
+   * 
+   * @param tx - Transaction body
+   * @param hexPrivateKey - Hex-encoded private key (64 or 128 hex chars)
+   * @returns Signed transaction object
+   */
+  static createSignedFromHexKey(tx: TxBody, hexPrivateKey: string): SignedTx {
+    const privateKey = hexToBytes(hexPrivateKey);
+    return Tx.createSignedFromRawKey(tx, privateKey);
   }
 }
 

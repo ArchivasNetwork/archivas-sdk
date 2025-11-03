@@ -181,12 +181,26 @@ console.log('Transactions:', block.txs?.length);
 **`Tx.hash(tx: TxBody): Uint8Array`**
 - Computes transaction hash: `blake2b-256("Archivas-TxV1" || canonical bytes)`
 
-**`Tx.sign(tx: TxBody, secretKey: Uint8Array): Promise<{sigHex, pubHex, hashHex}>`**
+**`Tx.sign(tx: TxBody, secretKey: Uint8Array): {sigHex, pubHex, hashHex}`**
 - Signs transaction with Ed25519
 - Returns signature, public key, and hash as hex strings
 
-**`Tx.createSigned(tx: TxBody, secretKey: Uint8Array): Promise<SignedTx>`**
+**`Tx.createSigned(tx: TxBody, secretKey: Uint8Array): SignedTx`**
 - Convenience: builds complete SignedTx object for broadcast
+
+**`Tx.signWithRawKey(tx: TxBody, privateKey: Uint8Array): { sigHex, pubHex, hashHex }`**
+- Signs transaction with raw 32-byte or 64-byte Ed25519 key
+- No mnemonic derivation required
+
+**`Tx.createSignedFromRawKey(tx: TxBody, privateKey: Uint8Array): SignedTx`**
+- Creates signed transaction from raw private key
+- Accepts 32-byte seed or 64-byte secret key
+
+**`Tx.signWithHexKey(tx: TxBody, hexPrivateKey: string): { sigHex, pubHex, hashHex }`**
+- Signs with hex-encoded private key (64 or 128 hex chars)
+
+**`Tx.createSignedFromHexKey(tx: TxBody, hexPrivateKey: string): SignedTx`**
+- Creates signed transaction from hex-encoded private key
 
 **`Tx.estimateSize(tx: TxBody): number`**
 - Returns transaction size in bytes (for fee estimation)
@@ -333,9 +347,29 @@ const tx = Tx.buildTransfer({
 
 ```typescript
 const txHash = Tx.hash(tx);
-const { sigHex, pubHex } = await Tx.sign(tx, secretKey);
+const { sigHex, pubHex } = Tx.sign(tx, secretKey);
 
 // Use sigHex, pubHex, and bytesToHex(txHash) for broadcast
+```
+
+### Signing with Raw Private Keys
+
+```typescript
+import { Tx } from '@archivas/sdk';
+
+// Option 1: Use 64-byte secret key (from any source, not just mnemonic)
+const secretKey = new Uint8Array(64);  // Your raw 64-byte key
+const signed = Tx.createSignedFromRawKey(tx, secretKey);
+
+// Option 2: Use 32-byte seed (private key only)
+const seed = new Uint8Array(32);  // Your raw 32-byte seed
+const signed = Tx.createSignedFromRawKey(tx, seed);
+
+// Option 3: Use hex-encoded key (convenient for string storage)
+const hexKey = "your64or128hexchars...";
+const signed = Tx.createSignedFromHexKey(tx, hexKey);
+
+// All methods work WITHOUT mnemonic derivation!
 ```
 
 ---
