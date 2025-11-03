@@ -84,7 +84,8 @@ export interface ArchivasBlockSummary {
   height: string;
   hash: string;
   timestamp?: string;
-  miner?: string;
+  farmer?: string;      // Proof-of-Space-and-Time farmer
+  miner?: string;       // @deprecated - use farmer instead
   txCount?: number;
   difficulty?: string;
 }
@@ -108,7 +109,8 @@ export interface ArchivasBlock {
   prevHash?: string;
   timestamp?: string;
   difficulty?: string;
-  miner?: string;
+  farmer?: string;      // Proof-of-Space-and-Time farmer
+  miner?: string;       // @deprecated - use farmer instead
   txs?: ArchivasTxSummary[];
 }
 

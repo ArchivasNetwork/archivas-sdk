@@ -1,6 +1,6 @@
 {
   "name": "@archivas/sdk",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Official TypeScript SDK for Archivas blockchain (v1.1.0 API)",
   "type": "module",
   "main": "./dist/index.cjs",

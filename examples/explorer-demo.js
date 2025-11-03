@@ -28,6 +28,7 @@ async function main() {
       console.log(`     Height: ${block.height}`);
       console.log(`     Hash: ${block.hash}`);
       if (block.timestamp) console.log(`     Time: ${block.timestamp}`);
+      if (block.farmer) console.log(`     Farmer: ${block.farmer}`);
       if (block.difficulty) console.log(`     Difficulty: ${block.difficulty}`);
       if (block.txCount !== undefined) console.log(`     Transactions: ${block.txCount}`);
       console.log();
@@ -64,7 +65,7 @@ async function main() {
       if (blockDetail.prevHash) console.log(`     Previous Hash: ${blockDetail.prevHash}`);
       if (blockDetail.timestamp) console.log(`     Timestamp: ${blockDetail.timestamp}`);
       if (blockDetail.difficulty) console.log(`     Difficulty: ${blockDetail.difficulty}`);
-      if (blockDetail.miner) console.log(`     Miner: ${blockDetail.miner}`);
+      if (blockDetail.farmer) console.log(`     Farmer: ${blockDetail.farmer}`);
       if (blockDetail.txs) console.log(`     Transactions: ${blockDetail.txs.length}`);
       console.log();
     }

@@ -133,6 +133,7 @@ const rpc = createRpcClient();
 const blocks = await rpc.getRecentBlocks(20);  // Default: 20
 blocks.forEach(block => {
   console.log(`Block ${block.height}: ${block.hash}`);
+  console.log(`  Farmer: ${block.farmer}`);
   console.log(`  Transactions: ${block.txCount}`);
   console.log(`  Difficulty: ${block.difficulty}`);
 });
@@ -273,7 +274,8 @@ interface ArchivasBlockSummary {
   height: string;
   hash: string;
   timestamp?: string;
-  miner?: string;
+  farmer?: string;      // Proof-of-Space-and-Time farmer
+  miner?: string;       // deprecated - use farmer instead
   txCount?: number;
   difficulty?: string;
 }
@@ -295,7 +297,8 @@ interface ArchivasBlock {
   prevHash?: string;
   timestamp?: string;
   difficulty?: string;
-  miner?: string;
+  farmer?: string;      // Proof-of-Space-and-Time farmer
+  miner?: string;       // deprecated - use farmer instead
   txs?: ArchivasTxSummary[];
 }
 ```

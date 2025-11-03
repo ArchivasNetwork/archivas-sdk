@@ -144,7 +144,7 @@ describe('Explorer API', () => {
         prevHash: 'prevhash456',
         timestamp: '2025-01-01T00:00:00Z',
         difficulty: '1000000',
-        miner: 'arcv1miner111111111111111111111111111111111111',
+        farmer: 'arcv1farmer111111111111111111111111111111111111',
         txs: [
           {
             hash: 'tx1',
@@ -221,6 +221,36 @@ describe('Explorer API', () => {
       expect(blocks[0].height).toBe('100');
       expect(blocks[0].hash).toBe('abc123');
       expect(blocks[0].timestamp).toBeUndefined();
+    });
+
+    it('should support both farmer and miner fields (backward compatibility)', async () => {
+      const mockBlocks: ArchivasBlockSummary[] = [
+        {
+          height: '100',
+          hash: 'abc123',
+          farmer: 'arcv1farmer111111111111111111111111111111111111'
+        },
+        {
+          height: '99',
+          hash: 'def456',
+          miner: 'arcv1miner111111111111111111111111111111111111'  // Old field
+        }
+      ];
+
+      global.fetch = vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ blocks: mockBlocks })
+        } as Response)
+      );
+
+      const blocks = await rpcClient.getRecentBlocks();
+
+      // New farmer field
+      expect(blocks[0].farmer).toBe('arcv1farmer111111111111111111111111111111111111');
+      
+      // Old miner field still works
+      expect(blocks[1].miner).toBe('arcv1miner111111111111111111111111111111111111');
     });
   });
 });
