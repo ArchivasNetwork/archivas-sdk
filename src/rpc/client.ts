@@ -165,6 +165,48 @@ export class RpcClient {
   async getBlockByHeight(height: number | string): Promise<ArchivasBlock> {
     return this.request<ArchivasBlock>('GET', `/block/${height}`);
   }
+
+  // Health & Network Info
+
+  /**
+   * Get genesis hash
+   * @returns Genesis block hash
+   */
+  async getGenesisHash(): Promise<{ genesisHash: string }> {
+    return this.request<{ genesisHash: string }>('GET', '/genesisHash');
+  }
+
+  /**
+   * Check node health (quick)
+   * @returns Health status
+   */
+  async getHealth(): Promise<{ ok: boolean; height: number; difficulty: number; peers: number }> {
+    return this.request<any>('GET', '/healthz');
+  }
+
+  /**
+   * Get detailed health status
+   * @returns Detailed health metrics
+   */
+  async getHealthDetailed(): Promise<any> {
+    return this.request<any>('GET', '/health');
+  }
+
+  /**
+   * Get connected peers
+   * @returns Peer list
+   */
+  async getPeers(): Promise<{ connected: string[]; known: string[] }> {
+    return this.request<any>('GET', '/peers');
+  }
+
+  /**
+   * Get node version and build info
+   * @returns Version information
+   */
+  async getVersion(): Promise<{ version: string; commit: string; buildTime: string }> {
+    return this.request<any>('GET', '/version');
+  }
 }
 
 /**
