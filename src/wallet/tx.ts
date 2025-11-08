@@ -227,9 +227,9 @@ export class Tx {
 
     return {
       tx,
-      pubkey: pubBase64,
-      sig: sigBase64,
-      hash: hashHex
+      Pubkey: pubBase64,  // Capital P to match server
+      Sig: sigBase64,     // Capital S to match server
+      Hash: hashHex       // Capital H to match server
     };
   }
 
