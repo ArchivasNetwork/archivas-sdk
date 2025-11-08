@@ -30,9 +30,9 @@ export interface TxBody {
   type: "transfer";
   from: Address;
   to: Address;
-  amount: number;  // u64 as number (API expects number, not string)
-  fee: number;     // u64 as number
-  nonce: number;   // u64 as number
+  amount: string;  // u64 as string (API requirement)
+  fee: string;     // u64 as string (API requirement)
+  nonce: string;   // u64 as string (API requirement)
   memo?: string;   // optional, max 256 bytes UTF-8
 }
 
