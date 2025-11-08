@@ -39,9 +39,9 @@ export interface TxBody {
 /** Signed transaction for broadcast */
 export interface SignedTx {
   tx: TxBody;
-  Pubkey: string;  // base64 encoded public key (capital P to match server)
-  Sig: string;     // base64 encoded signature (capital S to match server)
-  Hash: string;    // hex encoded hash (capital H to match server)
+  pubkey: string;  // base64 encoded public key
+  sig: string;     // base64 encoded signature
+  hash: string;    // hex encoded hash
 }
 
 /** RPC submit response */

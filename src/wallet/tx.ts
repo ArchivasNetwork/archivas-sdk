@@ -139,9 +139,9 @@ export class Tx {
 
     return {
       tx,
-      pubkey: pubBase64,
-      sig: sigBase64,
-      hash: hashHex
+      pubkey: pubBase64,  // lowercase to match JSON tag
+      sig: sigBase64,     // lowercase to match JSON tag
+      hash: hashHex       // lowercase to match JSON tag
     };
   }
 
@@ -227,9 +227,9 @@ export class Tx {
 
     return {
       tx,
-      Pubkey: pubBase64,  // Capital P to match server
-      Sig: sigBase64,     // Capital S to match server
-      Hash: hashHex       // Capital H to match server
+      pubkey: pubBase64,  // lowercase to match JSON tag
+      sig: sigBase64,     // lowercase to match JSON tag
+      hash: hashHex       // lowercase to match JSON tag
     };
   }
 
