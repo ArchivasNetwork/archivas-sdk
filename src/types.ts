@@ -30,18 +30,18 @@ export interface TxBody {
   type: "transfer";
   from: Address;
   to: Address;
-  amount: string;  // u64 as string (API requirement)
-  fee: string;     // u64 as string (API requirement)
-  nonce: string;   // u64 as string (API requirement)
+  amount: number;  // u64 as number (API requirement)
+  fee: number;     // u64 as number (API requirement)
+  nonce: number;   // u64 as number (API requirement)
   memo?: string;   // optional, max 256 bytes UTF-8
 }
 
 /** Signed transaction for broadcast */
 export interface SignedTx {
   tx: TxBody;
-  pubkey: string;  // hex or base64
-  sig: string;     // hex or base64
-  hash: string;    // hex (32 bytes)
+  Pubkey: string;  // base64 encoded public key (capital P to match server)
+  Sig: string;     // base64 encoded signature (capital S to match server)
+  Hash: string;    // hex encoded hash (capital H to match server)
 }
 
 /** RPC submit response */
