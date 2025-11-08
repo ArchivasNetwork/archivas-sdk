@@ -114,10 +114,17 @@ export class Tx {
   static createSigned(tx: TxBody, secretKey: Uint8Array): SignedTx {
     const { sigHex, pubHex, hashHex } = Tx.sign(tx, secretKey);
 
+    // Convert hex to base64 for API compatibility
+    const sigBytes = hexToBytes(sigHex);
+    const pubBytes = hexToBytes(pubHex);
+    
+    const sigBase64 = bytesToBase64(sigBytes);
+    const pubBase64 = bytesToBase64(pubBytes);
+
     return {
       tx,
-      pubkey: pubHex,
-      sig: sigHex,
+      pubkey: pubBase64,
+      sig: sigBase64,
       hash: hashHex
     };
   }
@@ -195,10 +202,17 @@ export class Tx {
   static createSignedFromRawKey(tx: TxBody, privateKey: Uint8Array): SignedTx {
     const { sigHex, pubHex, hashHex } = Tx.signWithRawKey(tx, privateKey);
 
+    // Convert hex to base64 for API compatibility
+    const sigBytes = hexToBytes(sigHex);
+    const pubBytes = hexToBytes(pubHex);
+    
+    const sigBase64 = bytesToBase64(sigBytes);
+    const pubBase64 = bytesToBase64(pubBytes);
+
     return {
       tx,
-      pubkey: pubHex,
-      sig: sigHex,
+      pubkey: pubBase64,
+      sig: sigBase64,
       hash: hashHex
     };
   }
@@ -231,6 +245,51 @@ export class Tx {
   static createSignedFromHexKey(tx: TxBody, hexPrivateKey: string): SignedTx {
     const privateKey = hexToBytes(hexPrivateKey);
     return Tx.createSignedFromRawKey(tx, privateKey);
+  }
+
+  /**
+   * Helper: Convert base64 signature back to hex (for debugging/verification)
+   * @param base64Sig - Base64-encoded signature
+   * @returns Hex-encoded signature
+   */
+  static base64ToHex(base64Sig: string): string {
+    const bytes = base64ToBytes(base64Sig);
+    return bytesToHex(bytes);
+  }
+}
+
+/**
+ * Convert bytes to base64 string (browser-compatible)
+ */
+function bytesToBase64(bytes: Uint8Array): string {
+  if (typeof Buffer !== 'undefined') {
+    // Node.js environment
+    return Buffer.from(bytes).toString('base64');
+  } else {
+    // Browser environment
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
+}
+
+/**
+ * Convert base64 string to bytes (browser-compatible)
+ */
+function base64ToBytes(base64: string): Uint8Array {
+  if (typeof Buffer !== 'undefined') {
+    // Node.js environment
+    return new Uint8Array(Buffer.from(base64, 'base64'));
+  } else {
+    // Browser environment
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
   }
 }
 

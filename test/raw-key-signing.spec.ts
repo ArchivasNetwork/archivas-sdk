@@ -124,9 +124,10 @@ describe('Raw Key Signing', () => {
       expect(signed.pubkey).toBeTruthy();
       expect(signed.sig).toBeTruthy();
       expect(signed.hash).toBeTruthy();
-      expect(signed.pubkey).toHaveLength(64);
-      expect(signed.sig).toHaveLength(128);
-      expect(signed.hash).toHaveLength(64);
+      // Base64 encoding: 32 bytes = 44 chars, 64 bytes = 88 chars
+      expect(signed.pubkey).toHaveLength(44); // 32-byte pubkey in base64
+      expect(signed.sig).toHaveLength(88); // 64-byte signature in base64
+      expect(signed.hash).toHaveLength(64); // Hash remains hex
     });
 
     it('should create complete signed transaction with 32-byte seed', () => {
@@ -145,9 +146,11 @@ describe('Raw Key Signing', () => {
       const signed = Tx.createSignedFromRawKey(tx, seed);
 
       expect(signed.tx).toEqual(tx);
-      expect(signed.pubkey).toBe(bytesToHex(keyPair.publicKey));
-      expect(signed.sig).toHaveLength(128);
-      expect(signed.hash).toHaveLength(64);
+      // Verify base64-encoded public key decodes to correct bytes
+      const pubkeyBytes = new Uint8Array(Buffer.from(signed.pubkey, 'base64'));
+      expect(pubkeyBytes).toEqual(keyPair.publicKey);
+      expect(signed.sig).toHaveLength(88); // 64-byte signature in base64
+      expect(signed.hash).toHaveLength(64); // Hash remains hex
     });
   });
 
@@ -216,9 +219,9 @@ describe('Raw Key Signing', () => {
       const signed = Tx.createSignedFromHexKey(tx, hexKey);
 
       expect(signed.tx).toEqual(tx);
-      expect(signed.pubkey).toHaveLength(64);
-      expect(signed.sig).toHaveLength(128);
-      expect(signed.hash).toHaveLength(64);
+      expect(signed.pubkey).toHaveLength(44); // 32-byte pubkey in base64
+      expect(signed.sig).toHaveLength(88); // 64-byte signature in base64
+      expect(signed.hash).toHaveLength(64); // Hash remains hex
 
       // Should match binary key result
       const binaryResult = Tx.createSignedFromRawKey(tx, keyPair.secretKey);
