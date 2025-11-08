@@ -1,5 +1,5 @@
 {
-  "name": "@archivas/sdk",
+  "name": "@archivasnetwork/sdk",
   "version": "1.4.0",
   "description": "Official TypeScript SDK for Archivas blockchain (v1.1.0 API)",
   "type": "module",
