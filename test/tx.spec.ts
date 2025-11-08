@@ -20,9 +20,9 @@ describe('Tx', () => {
     });
 
     expect(tx.type).toBe('transfer');
-    expect(tx.amount).toBe('1000000000');
-    expect(tx.fee).toBe('100000');
-    expect(tx.nonce).toBe('0');
+    expect(tx.amount).toBe(1000000000);
+    expect(tx.fee).toBe(100000);
+    expect(tx.nonce).toBe(0);
   });
 
   it('should include optional memo', () => {

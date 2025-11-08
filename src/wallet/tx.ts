@@ -11,15 +11,15 @@ import { ARCHIVAS_CONSTANTS } from '../types';
 export class Tx {
   /**
    * Build a transfer transaction
-   * @param params - Transfer parameters
-   * @returns Transaction body
+   * @param params - Transfer parameters (amounts as strings for convenience)
+   * @returns Transaction body (with amounts as numbers for API compatibility)
    */
   static buildTransfer(params: {
     from: Address;
     to: Address;
-    amount: string;
-    fee: string;
-    nonce: string;
+    amount: string | number;  // Accept string or number
+    fee: string | number;
+    nonce: string | number;
     memo?: string;
   }): TxBody {
     // Validate memo length
@@ -27,13 +27,29 @@ export class Tx {
       throw new Error(`Memo exceeds maximum length of ${ARCHIVAS_CONSTANTS.MAX_MEMO_LENGTH} bytes`);
     }
 
+    // Convert to numbers - API expects numbers, not strings
+    const amount = typeof params.amount === 'string' ? Number(params.amount) : params.amount;
+    const fee = typeof params.fee === 'string' ? Number(params.fee) : params.fee;
+    const nonce = typeof params.nonce === 'string' ? Number(params.nonce) : params.nonce;
+
+    // Validate numbers
+    if (!Number.isInteger(amount) || amount < 0) {
+      throw new Error('Amount must be a non-negative integer');
+    }
+    if (!Number.isInteger(fee) || fee < 0) {
+      throw new Error('Fee must be a non-negative integer');
+    }
+    if (!Number.isInteger(nonce) || nonce < 0) {
+      throw new Error('Nonce must be a non-negative integer');
+    }
+
     const tx: TxBody = {
       type: 'transfer',
       from: params.from,
       to: params.to,
-      amount: params.amount,
-      fee: params.fee,
-      nonce: params.nonce
+      amount,
+      fee,
+      nonce
     };
 
     if (params.memo) {
