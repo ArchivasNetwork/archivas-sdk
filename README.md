@@ -2,7 +2,7 @@
 
 > Official TypeScript SDK for Archivas blockchain (v1.1.0 API)
 
-[![npm version](https://badge.fury.io/js/%40archivas%2Fsdk.svg)](https://www.npmjs.com/package/@archivas/sdk)
+[![npm version](https://badge.fury.io/js/%40archivasnetwork%2Fsdk.svg)](https://www.npmjs.com/package/@archivasnetwork/sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -38,11 +38,11 @@ For a complete list of public endpoints, see the [Archivas node repository](http
 ## Installation
 
 ```bash
-npm install @archivas/sdk
+npm install @archivasnetwork/sdk
 # or
-yarn add @archivas/sdk
+yarn add @archivasnetwork/sdk
 # or
-pnpm add @archivas/sdk
+pnpm add @archivasnetwork/sdk
 ```
 
 ---
@@ -52,7 +52,7 @@ pnpm add @archivas/sdk
 ### Generate Wallet
 
 ```typescript
-import { Derivation } from '@archivas/sdk';
+import { Derivation } from '@archivasnetwork/sdk';
 
 // Generate new mnemonic
 const mnemonic = Derivation.mnemonicGenerate();
@@ -70,7 +70,7 @@ console.log('Address:', address);  // arcv1...
 ### Send Transaction
 
 ```typescript
-import { Derivation, Tx, createRpcClient } from '@archivas/sdk';
+import { Derivation, Tx, createRpcClient } from '@archivasnetwork/sdk';
 
 // Setup
 const mnemonic = "your 24 word mnemonic here";
@@ -104,7 +104,7 @@ console.log('Transaction hash:', result.hash);
 ### Query Chain
 
 ```typescript
-import { createRpcClient } from '@archivas/sdk';
+import { createRpcClient } from '@archivasnetwork/sdk';
 
 const rpc = createRpcClient();
 
@@ -125,7 +125,7 @@ console.log('Pending transactions:', pending.length);
 ### Explorer API
 
 ```typescript
-import { createRpcClient } from '@archivas/sdk';
+import { createRpcClient } from '@archivasnetwork/sdk';
 
 const rpc = createRpcClient();
 
@@ -308,7 +308,7 @@ interface ArchivasBlock {
 ## Constants
 
 ```typescript
-import { ARCHIVAS_CONSTANTS } from '@archivas/sdk';
+import { ARCHIVAS_CONSTANTS } from '@archivasnetwork/sdk';
 
 ARCHIVAS_CONSTANTS.COIN_TYPE          // 734
 ARCHIVAS_CONSTANTS.DERIVATION_PATH    // "m/734'/0'/0'/0/0"
@@ -358,7 +358,7 @@ const { sigHex, pubHex } = Tx.sign(tx, secretKey);
 ### Signing with Raw Private Keys
 
 ```typescript
-import { Tx } from '@archivas/sdk';
+import { Tx } from '@archivasnetwork/sdk';
 
 // Option 1: Use 64-byte secret key (from any source, not just mnemonic)
 const secretKey = new Uint8Array(64);  // Your raw 64-byte key
@@ -476,7 +476,7 @@ MIT © 2025 Archivas Network
 - [GitHub Repository](https://github.com/ArchivasNetwork/archivas-sdk)
 - [Archivas Documentation](https://github.com/ArchivasNetwork/archivas)
 - [API Specification](https://github.com/ArchivasNetwork/archivas/blob/main/specs/api-wallet-v1.md)
-- [NPM Package](https://www.npmjs.com/package/@archivas/sdk)
+- [NPM Package](https://www.npmjs.com/package/@archivasnetwork/sdk)
 
 ---
 
