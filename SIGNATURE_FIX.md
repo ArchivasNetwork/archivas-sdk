@@ -62,7 +62,7 @@ If you're upgrading from v1.2.1 to v1.3.0:
 **No code changes needed!** The API is the same, only the internal encoding changed.
 
 ```typescript
-import { Derivation, Tx, createRpcClient } from '@archivas/sdk';
+import { Derivation, Tx, createRpcClient } from '@archivasnetwork/sdk';
 
 // Everything works the same
 const keyPair = Derivation.fromMnemonic(mnemonic);
@@ -79,7 +79,7 @@ const result = await client.submit(signedTx); // ✅ No more signature errors!
 If you need to convert signatures between formats:
 
 ```typescript
-import { Tx } from '@archivas/sdk';
+import { Tx } from '@archivasnetwork/sdk';
 
 // Convert base64 signature to hex (for inspection)
 const hexSig = Tx.base64ToHex(signedTx.sig);
